@@ -1,3 +1,22 @@
+#    This mouse jiggler generates mouse and keyboard events to simulate user activity
+#    Copyright (C) 2024  Maurice Lambert
+
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# To compile on windows with nim 2.0.8:
+# nim c --stackTrace:off  --lineTrace:off --checks:off --assertions:off -d:release -d=mingw --opt:size --passl:"-s" MouseJiggler.nim
+
 import winim/lean, unicode, random, os
 
 proc getScreenBounds(): (int32, int32) =
