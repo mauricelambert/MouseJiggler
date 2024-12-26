@@ -32,12 +32,12 @@ let words = @["suspicionful", "myzostomidae", "dirties", "immechanically", "nond
 # b = ('@["' + ('", "'.join(choices(a, k=500))) + '"]').replace("\n", "")
 # print(b)
 
-proc randomSleep() =
-  sleep(rand(1500).int + 500)
+proc randomSleep(minimum: int = 500, random_value: int = 1500) =
+  sleep(rand(random_value).int + minimum)
 
 proc randomPositionWithinBounds(precedentX, precedentY, screenWidth, screenHeight: int32): (int32, int32) =
-  var newX = int32(precedentX.int + rand(500).int - 250)
-  var newY = int32(precedentY.int + rand(500).int - 250)
+  var newX = int32(precedentX.int + rand(100).int - 50)
+  var newY = int32(precedentY.int + rand(100).int - 50)
 
   if newX < 0: newX = 0
   if newX >= screenWidth: newX = screenWidth - 1
@@ -52,20 +52,22 @@ proc clickAt(x: int32, y: int32) =
   mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
 
 proc typeString(s: string) =
-  var inputs: seq[INPUT] = @[]
+  var input: INPUT
+  var inputs: seq[INPUT] = @[input]
   
   for c in s.toRunes:
-    var input: INPUT
     input.type = INPUT_KEYBOARD
     input.ki.wVk = 0
     input.ki.wScan = cast[WORD](c.int32)
     input.ki.dwFlags = KEYEVENTF_UNICODE
-    inputs.add(input)
+    inputs[0] = input
+    SendInput(inputs.len.UINT, addr inputs[0], sizeof(INPUT).cint)
 
     input.ki.dwFlags = KEYEVENTF_UNICODE or KEYEVENTF_KEYUP
-    inputs.add(input)
+    inputs[0] = input
+    SendInput(inputs.len.UINT, addr inputs[0], sizeof(INPUT).cint)
 
-  discard SendInput(inputs.len.UINT, addr inputs[0], sizeof(INPUT).cint)
+    randomSleep(20, 300)
 
 proc jiggleMouse(screenWidth, screenHeight: int32) =
   GetCursorPos(addr originalPos)
@@ -75,10 +77,17 @@ proc jiggleMouse(screenWidth, screenHeight: int32) =
     if rand(4) == 0:
         clickAt(originalPos.x, originalPos.y)
     else:
-      typeString(sample(words) & " ")
+      for a in 0 ..< rand(4):
+          randomSleep(5000, 1000)
+          typeString(sample(words) & " ")
 
-    let (newX, newY) = randomPositionWithinBounds(newX, newY, screenWidth, screenHeight)
-    SetCursorPos(newX, newY)
+    let (precedentX, precedentY) = (newX, newY)
+    (newX, newY) = randomPositionWithinBounds(newX, newY, screenWidth, screenHeight)
+    let (diffX, diffY) = ((newX - precedentX), (newY - precedentY))
+    for a in 0 ..< rand(7):
+        randomSleep(50, 500)
+        SetCursorPos(newX, newY)
+        (newX, newY) = (newX + diffX, newY + diffY)
     randomSleep()
 
 jiggleMouse(screenWidth, screenHeight)
