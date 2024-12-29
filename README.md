@@ -1,4 +1,4 @@
-![MouseJiggler Logo](https://mauricelambert.github.io/info/python/security/MouseJiggler_small.png "MouseJiggler logo")
+![MouseJiggler Logo](https://mauricelambert.github.io/info/nim/security/MouseJiggler_small.png "MouseJiggler logo")
 
 # MouseJiggler
 
@@ -17,7 +17,7 @@ This program generates mouse and keyboard events to simulate user activity, usef
 ## Compilation
 
 ```bash
-nim c --stackTrace:off  --lineTrace:off --checks:off --assertions:off -d:release -d=mingw --opt:size --passl:"-s" MouseJiggler.nim
+nim --app:gui c --stackTrace:off  --lineTrace:off --checks:off --assertions:off -d:release -d=mingw --opt:size --passl:"-s" MouseJiggler.nim
 ```
 
 ## Licence
